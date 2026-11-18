@@ -22,6 +22,7 @@ dnf install -y iwd
 ln -s /dev/null /usr/lib/systemd/system/wpa_supplicant.service
 
 # --- COPR ---
+dnf install -y 'dnf5-command(copr)'
 dnf -y install dnf-plugins-core
 
 # --- OTHER ---
