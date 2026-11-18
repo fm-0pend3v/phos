@@ -1,0 +1,28 @@
+#!/bin/bash
+
+SOCKETS=(
+    "gnome-keyring-daemon.socket"
+    "gcr-ssh-agent.socket"
+    "pipewire.socket"
+    "pipewire-pulse.socket"
+    "wireplumber.service"
+)
+
+for sock in "${SOCKETS[@]}"; do
+    # Verifico se il socket è abilitato; se non lo è, lo abilito
+    if ! systemctl --user is-enabled --quiet "$sock" 2>/dev/null; then
+        echo "[Socket Check] $sock non è abilitato. Abilitazione in corso..."
+        systemctl --user enable "$sock"
+    else
+        echo "[Socket Check] $sock è già abilitato."
+    fi
+
+    # Verifico se il socket è attivo; se non lo è, lo avvio
+    if ! systemctl --user is-active --quiet "$sock" 2>/dev/null; then
+        echo "[Socket Check] $sock non è avviato. Avvio in corso..."
+        systemctl --user start "$sock"
+    else
+        echo "[Socket Check] $sock è già attivo."
+    fi
+done
+
