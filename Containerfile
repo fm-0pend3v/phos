@@ -6,6 +6,7 @@ COPY system_files /system_files
 # Base Image
 # FROM ghcr.io/ublue-os/base-main:latest
 FROM quay.io/fedora/fedora-bootc:latest
+
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:stable
 # FROM ghcr.io/ublue-os/bazzite:testing
