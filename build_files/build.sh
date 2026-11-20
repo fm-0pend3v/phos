@@ -139,7 +139,6 @@ for service_file in /ctx/system_files/usr/lib/systemd/system/*.service; do
     echo "Abilitazione globale di: $service_name"
     ln -sf "/usr/lib/systemd/system/$service_name" "$SYSTEM_WANTS_DIR/$service_name"
 done
-ln -s /usr/lib/systemd/system/sshd.service /etc/systemd/system/multi-user.target.wants/sshd.service
 
 # --- USER SERVICE ---
 # Crea i link simbolici nel target grafico globale utente
