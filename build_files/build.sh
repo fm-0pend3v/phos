@@ -16,14 +16,14 @@ dnf --setopt=localpkg_gpgcheck=1 install -y \
     https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-${FEDORA_VERSION}.noarch.rpm \
     https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${FEDORA_VERSION}.noarch.rpm
 
+# --- COPR ---
+dnf install -y 'dnf5-command(copr)'
+dnf -y install dnf-plugins-core
+
 # --- IWD ---
 dnf remove -y wpa_supplicant
 dnf install -y iwd
 ln -s /dev/null /usr/lib/systemd/system/wpa_supplicant.service
-
-# --- COPR ---
-dnf install -y 'dnf5-command(copr)'
-dnf -y install dnf-plugins-core
 
 # --- OTHER ---
 dnf install -y \
@@ -73,6 +73,9 @@ dnf install -y \
     niri \
     noctalia \
     sddm
+
+# --- FLATPAK ---
+dnf install -y flatpak
 
 # --- VULKAN AND LLAMA-CPP ---
 #dnf copr enable -y sneed/llama-cpp-vulkan
