@@ -72,7 +72,7 @@ dnf install -y \
     xorg-x11-server-Xwayland \
     niri \
     noctalia \
-    sddm
+    sddm-wayland-plasma
 
 # --- FLATPAK ---
 dnf install -y flatpak
