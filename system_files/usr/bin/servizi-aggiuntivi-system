@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# ================================ #
-# 1. CONTROLLO SERVIZI DI SISTEMA
-# ================================ #
 SYSTEM_UNITS=("sddm.service")
 
 echo "--- Controllo servizi di sistema ---"

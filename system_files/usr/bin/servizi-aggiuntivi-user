@@ -2,7 +2,6 @@
 
 SOCKETS=(
     "gnome-keyring-daemon.socket"
-    "gcr-ssh-agent.socket"
     "pipewire.socket"
     "pipewire-pulse.socket"
     "wireplumber.service"

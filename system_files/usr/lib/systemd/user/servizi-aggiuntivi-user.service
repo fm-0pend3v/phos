@@ -5,7 +5,7 @@ After=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/servizi-aggiuntivi
+ExecStart=/usr/bin/servizi-aggiuntivi-user
 RemainAfterExit=yes
 
 [Install]
