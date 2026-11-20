@@ -20,59 +20,14 @@ dnf --setopt=localpkg_gpgcheck=1 install -y \
 dnf install -y 'dnf5-command(copr)'
 dnf -y install dnf-plugins-core
 
-# --- IWD ---
-dnf remove -y wpa_supplicant
-dnf install -y iwd
-ln -s /dev/null /usr/lib/systemd/system/wpa_supplicant.service
-
 # --- OTHER ---
 dnf install -y \
     htop \
     nvtop \
     fastfetch \
-    alacritty \
-    xed \
-    cliphist \
-    wl-clipboard \
     mediawriter \
-    smartmontools \
     fuse \
     fuse-libs
-
-# --- RETE, WI-FI & BLUETOOTH ---
-dnf install -y \
-    NetworkManager \
-    NetworkManager-wifi \
-    linux-firmware \
-    iwlwifi-mvm-firmware \
-    iwlwifi-dvm-firmware \
-    iwlwifi-mld-firmware \
-    iwlegacy-firmware \
-    bluez \
-    bluez-tools
-
-# --- PIPEWIRE, WIREPLUMBER ---
-dnf install -y \
-    pipewire \
-    pipewire-alsa \
-    pipewire-pulseaudio \
-    pipewire-utils \
-    wireplumber
-
-# --- NIRI AND NOCTALIA ---
-dnf install -y \
-    xdg-utils \
-    xdg-desktop-portal \
-    xdg-desktop-portal-gtk \
-    xdg-desktop-portal-gnome \
-    xdg-desktop-portal-wlr \
-    gnome-keyring \
-    wayland-utils \
-    xwayland-satellite \
-    xorg-x11-server-Xwayland \
-    niri \
-    noctalia \
-    sddm-wayland-plasma
 
 # --- FLATPAK ---
 dnf install -y flatpak
@@ -113,16 +68,11 @@ dnf install -y \
 # --- NETBIRD ---
 dnf install -y --setopt=tsflags=noscripts \
     netbird
+
 dnf install -y \
     netbird-ui \
     gtk4 \
     webkitgtk6.0
-
-# --- CLEANING ---
-dnf remove -y \
-    blueman \
-    network-manager-applet
-rm /usr/share/wayland-sessions/niri.desktop
 
 # --- SCRIPT DA INIZIALIZZARE IN RUNTIME ---
 # Imposta i permessi per gli script personalizzati in runtime

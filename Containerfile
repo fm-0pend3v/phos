@@ -4,13 +4,14 @@ COPY build_files /
 COPY system_files /system_files
 
 # Base Image
-FROM ghcr.io/ublue-os/base-main:latest
+# FROM ghcr.io/ublue-os/base-main:latest
 # FROM quay.io/fedora/fedora-bootc:latest
 
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:stable
 # FROM ghcr.io/ublue-os/bazzite:testing
 # FROM ghcr.io/ublue-os/aurora:stable
+FROM ghcr.io/ublue-os/bazzite-nvidia:stable
 # ... and so on, here are more base images
 # Universal Blue Images: https://github.com/orgs/ublue-os/packages
 # Fedora base image: quay.io/fedora/fedora-bootc:44
