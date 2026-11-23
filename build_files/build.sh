@@ -2,118 +2,26 @@
 
 set -ouex pipefail
 
+# Copy the contents of system_files/ of the git repo to /
 cp -avf "/ctx/system_files"/. /
 
-# --- DNF SPEEDUP ---
-sed -i '/^\[main\]/a max_parallel_downloads=10' /etc/dnf/dnf.conf
+### Install packages
 
-# --- Installazione repo RPM fusion ---
-FEDORA_VERSION=$(sh -c '. /etc/os-release; echo $VERSION_ID')
-dnf install -y distribution-gpg-keys
-rpmkeys --import /usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-free-fedora-${FEDORA_VERSION}
-rpmkeys --import /usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-nonfree-fedora-${FEDORA_VERSION}
-dnf --setopt=localpkg_gpgcheck=1 install -y \
-    https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-${FEDORA_VERSION}.noarch.rpm \
-    https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-${FEDORA_VERSION}.noarch.rpm
+# Packages can be installed from any enabled yum repo on the image.
+# RPMfusion repos are available by default in ublue main images
+# List of rpmfusion packages can be found here:
+# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
 
-# --- COPR ---
-dnf install -y 'dnf5-command(copr)'
-dnf -y install dnf-plugins-core
+# this installs a package from fedora repos
+dnf5 install -y tmux
 
-# --- OTHER ---
-dnf install -y \
-    htop \
-    nvtop \
-    fastfetch \
-    mediawriter \
-    fuse \
-    fuse-libs
+# Use a COPR Example:
+#
+# dnf5 -y copr enable ublue-os/staging
+# dnf5 -y install package
+# Disable COPRs so they don't end up enabled on the final image:
+# dnf5 -y copr disable ublue-os/staging
 
-# --- FLATPAK ---
-dnf install -y flatpak
+#### Example for enabling a System Unit File
 
-# --- VULKAN AND LLAMA-CPP ---
-#dnf copr enable -y sneed/llama-cpp-vulkan
-dnf copr enable -y fm-0p3n-d3v/llama-cpp-vulkan-rpc
-dnf install -y \
-    mesa-dri-drivers \
-    mesa-vulkan-drivers \
-    vulkan-loader \
-    vulkan-tools \
-    clinfo \
-    llama-cpp-vulkan-rpc
-
-# --- DOCKER ---
-dnf config-manager addrepo --from-repofile https://download.docker.com/linux/fedora/docker-ce.repo
-dnf remove -y docker \
-    docker-client \
-    docker-client-latest \
-    docker-common \
-    docker-latest \
-    docker-latest-logrotate \
-    docker-logrotate \
-    docker-engine
-dnf install -y \
-    docker-ce \
-    docker-ce-cli \
-    containerd.io \
-    docker-buildx-plugin \
-    docker-compose-plugin \
-    docker-ce-rootless-extras
-
-# --- DISTROBOX ---
-dnf install -y \
-    distrobox
-
-# --- NETBIRD ---
-dnf install -y --setopt=tsflags=noscripts \
-    netbird
-
-dnf install -y \
-    netbird-ui \
-    gtk4 \
-    webkitgtk6.0
-
-# --- SCRIPT DA INIZIALIZZARE IN RUNTIME ---
-# Imposta i permessi per gli script personalizzati in runtime
-for bash_file in /ctx/system_files/usr/bin/*; do
-    if [ -f "$bash_file" ]; then
-        bash_name=$(basename "$bash_file")
-        echo "Impostazione permessi di: $bash_name"
-        chmod +x /usr/bin/$bash_name
-    fi
-done
-
-# --- SYSTEM SERVICE ---
-SYSTEM_WANTS_DIR="/etc/systemd/system/multi-user.target.wants"
-mkdir -p "$SYSTEM_WANTS_DIR"
-for service_file in /ctx/system_files/usr/lib/systemd/system/*.service; do
-    service_name=$(basename "$service_file")
-    echo "Abilitazione globale di: $service_name"
-    ln -sf "/usr/lib/systemd/system/$service_name" "$SYSTEM_WANTS_DIR/$service_name"
-done
-
-# --- USER SERVICE ---
-# Crea i link simbolici nel target grafico globale utente
-USER_WANTS_DIR="/usr/lib/systemd/user/graphical-session.target.wants"
-mkdir -p "$USER_WANTS_DIR"
-for service_file in /ctx/system_files/usr/lib/systemd/user/*.service; do
-    service_name=$(basename "$service_file")
-    echo "Abilitazione globale di: $service_name"
-    ln -sf "/usr/lib/systemd/user/$service_name" "$USER_WANTS_DIR/$service_name"
-done
-
-# Aggiunge Flathub come repository globale di sistema
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-
-# Rename Distro for GRUB
-sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Fedora Rolling (Niri Edition phOS)"/' /usr/lib/os-release
-
-# --- CLEANING IMAGE ---
-dnf clean all
-rm -rf /tmp/* /var/tmp/*
-rm -rf /run/dnf /run/selinux-policy
-rm -rf /var/lib/dnf
-
-
-
+systemctl enable podman.socket
